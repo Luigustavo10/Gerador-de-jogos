@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Jogos</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    #container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      text-align: left;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    p {
+      flex: 0 0 calc(33.33% - 20px);
+      margin: 0;
+      padding: 10px;
+      background-color: #f2f2f2;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    #filterNumber {
+      width: 80%;
+      padding: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    #filterButton {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    #filterButton:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+
+    <h2>Gerador de Jogos</h2>
+
+    <form id="numberForm">
+      <label for="numbers">Digite 60 números (separados por vírgula):</label>
+      <textarea id="numbers" rows="4" placeholder="Exemplo: 1, 2, 3, ..." required></textarea>
+
+      <button type="button" onclick="generateGames()">Gerar Jogos</button>
+
+      <label for="filterNumber">Filtrar por número:</label>
+      <input type="text" id="filterNumber" placeholder="Digite o número">
+
+      <button type="button" id="filterButton" onclick="filterGames()">Filtrar Jogos</button>
+    </form>
+
+    <div id="result"></div>
+
+  </div>
+
+  <script>
+    var allGames = [];
+
+    function generateGames() {
+      var numbersInput = document.getElementById('numbers').value;
+      var numbersArray = numbersInput.split(',');
+
+      numbersArray = numbersArray.map(function(number) {
+        return number.trim();
+      });
+
+      var validNumbers = numbersArray.filter(function(number) {
+        return !isNaN(number) && Number.isInteger(Number(number));
+      });
+
+      if (validNumbers.length < 14) {
+        alert('Digite pelo menos 60 números inteiros válidos.');
+        return;
+      }
+
+      allGames = [];
+
+      for (var i = 0; i < 20; i++) {
+        var shuffledNumbers = validNumbers.sort(function() { return 0.5 - Math.random() });
+        var selectedNumbers = shuffledNumbers.slice(0, 6).sort(function(a, b) { return a - b; });
+        allGames.push(selectedNumbers);
+      }
+
+      displayGames(allGames);
+    }
+
+    function displayGames(games) {
+      var resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '<h3>14 Jogos Gerados:</h3>';
+
+      for (var i = 0; i < games.length; i++) {
+        var game = games[i].join(', ');
+        resultDiv.innerHTML += '<p><strong>Jogo ' + (i + 1) + ':</strong> ' + game + '</p>';
+      }
+    }
+
+    function filterGames() {
+      var filterNumber = document.getElementById('filterNumber').value;
+
+      if (isNaN(filterNumber) || filterNumber === '') {
+        alert('Digite um número válido para filtrar.');
+        return;
+      }
+
+      var filteredGames = allGames.filter(function(game) {
+        return game.includes(Number(filterNumber));
+      });
+
+      displayGames(filteredGames);
+    }
+  </script>
+
+</body>
+</html>
+
+
+
+
+
